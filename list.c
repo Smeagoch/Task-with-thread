@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+
 #define BYTE_WIDTH 8U
 
-list* add_item(int32_t number, list* back_item, list* next_item)
+list *add_item(int32_t number, list *back_item, list *next_item)
 {
-    list* new_item = (list*) malloc(sizeof(list));
+    list *new_item = (list *) malloc(sizeof(list));
     new_item->a = number;
     new_item->next = next_item;
     new_item->back = back_item;
@@ -13,7 +14,7 @@ list* add_item(int32_t number, list* back_item, list* next_item)
     return new_item;
 }
 
-list* find_list_end(list* list_begin)
+list *find_list_end(list *list_begin)
 {
     list* list_end = list_begin;
     while(list_end->next != NULL)
@@ -23,10 +24,10 @@ list* find_list_end(list* list_begin)
     return list_end;
 }
 
-void free_list(list* item)
+void free_list(list *item)
 {
-    list* back = item->back;
-    list* next = item->next;
+    list *back = item->back;
+    list *next = item->next;
     if (back != NULL)
         back->next = next;
     if (next != NULL)
@@ -34,14 +35,9 @@ void free_list(list* item)
     free(item);
 }
 
-void print_item(list* item)
+void print_list(list *list_begin)
 {
-    printf("list number - %d  ", item->a);
-}
-
-void print_list(list* list_begin)
-{
-    list* item = list_begin;
+    list *item = list_begin;
     while(item != NULL)
     {
         printf("list number - %d\n", item->a);

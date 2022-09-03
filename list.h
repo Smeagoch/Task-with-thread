@@ -6,25 +6,23 @@
 
 typedef struct list
 {
-    int32_t a;
-    struct list* back;
-    struct list* next;
+    int32_t a;          /* Значение */
+    struct list* back;  /* Предыдущий элемент */
+    struct list* next;  /* Следующий элемент */
 }list; 
 
-//Adding a new position to the list
+/* Добавление новой позиции в список */
 list* add_item(int32_t number, list* back_item, list* next_item);
 
-//Finding the end of the list
+/* Поиск конца списка */
 list* find_list_end(list* list_begin);
 
-void print_item(list* item);
-
-//Cliaring the list
+/* Очистка позиции */
 void free_list(list* item);
 
 void print_list(list* list_begin);
 
-//Search the number of binary zeros
+/* Подсчёт количества бинарных нулей в числу */
 uint32_t binary_zeros(int32_t a);
 
 #endif /* LIST_H */

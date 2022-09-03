@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <pthread.h>
 #include <stdint.h>
 #include "list.h"
@@ -13,16 +12,16 @@
 #define LOWER_BOUND -100
 #define UPPER_BOUND 100
 
-list* list_begin = NULL;
-list* list_end = NULL;
-list* list_back = NULL;
-list* list_next = NULL;
+list *list_begin = NULL;
+list *list_end = NULL;
+list *list_back = NULL;
+list *list_next = NULL;
 pthread_mutex_t mutex;
 
-//Search for the number of binary zeros from the beginning of the list
-void* thread_func(void* direction)
+/* Поиск количества нулей в списке */
+void *thread_func(void *direction)
 {
-    int dir = *(int*) direction;
+    uint8_t dir = *(uint8_t *) direction;
     if (dir == 1)
     {
         list_next = list_begin;
@@ -41,13 +40,13 @@ void* thread_func(void* direction)
         
         if (dir == 1)
         {
-            //Counting the number of zeros
+            /* Подсчёт количества нулей */
             uint32_t count = binary_zeros(list_next->a);
             printf("The number of binery zeros in %d - %d\n", list_next->a, count);
 
             pthread_mutex_lock(&mutex);
 
-            //The condition of complete passege through the list
+            /* Условие завершения прохождения списка */
             if (list_next->next == list_back || list_next->next == NULL)
             {
                 free_list(list_next);
@@ -55,21 +54,21 @@ void* thread_func(void* direction)
                 break;
             }
 
-            //Clearing and moving to the next position
-            list* next = list_next->next;
+            /* Очистка и переход к следующей позиции */
+            list *next = list_next->next;
             free_list(list_next);
             list_next = next;
             pthread_mutex_unlock(&mutex);
         }
         else
         {
-            //Counting the number of zeros
+            /* Подсчёт количества нулей */
             uint32_t count = binary_zeros(list_back->a);
             printf("The number of binery zeros in %d - %d\n", list_back->a, count);
             
             pthread_mutex_lock(&mutex);
 
-             //The condition of complete passege through the list
+            /* Условие завершения прохождения списка */
             if (list_back->back == list_next || list_back->back == NULL)
             {
                 free_list(list_back);
@@ -77,8 +76,8 @@ void* thread_func(void* direction)
                 break;
             }
 
-            //Clearing and moving to the next position
-            list* back = list_back->back;
+            /* Очистка и переход к следующей позиции */
+            list *back = list_back->back;
             free_list(list_back);
             list_back = back;
             pthread_mutex_unlock(&mutex);
@@ -86,14 +85,14 @@ void* thread_func(void* direction)
     }
 }
 
-//Filling the list
-list* add_list()
+/* Заполнение списка */
+list *add_list()
 {
-    list* list_begin = NULL;
+    list *list_begin = NULL;
     int32_t number = LOWER_BOUND + rand() % (UPPER_BOUND + 1 - LOWER_BOUND);
     list_begin = add_item(number, NULL, NULL);
-    list* plist = list_begin;
-    list* new_item = NULL;
+    list *plist = list_begin;
+    list *new_item = NULL;
     for (int i = 1; i < SIZE_OF_LIST; i++)
     {
         number = LOWER_BOUND + rand() % (UPPER_BOUND + 1 - LOWER_BOUND);
@@ -104,11 +103,11 @@ list* add_list()
     return list_begin;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     srand(time(NULL));
 
-    //Create list and search end
+    /* Создание списка и поиск конца */
     list_begin = add_list();
     list_end = find_list_end(list_begin);
     
@@ -116,8 +115,10 @@ int main(int argc, char* argv[])
 
     pthread_t pass_begin, pass_end;
 
-    int direction1 = 1; //Start from the beginning of the list
-    int direction2 = 0; //Start from the end of the list
+    /* Прохождение списка с начала */
+    uint8_t direction1 = 1;
+    /* Прохождение списка с конца */
+    uint8_t direction2 = 0;
 
     pthread_mutex_init(&mutex, NULL);
 
